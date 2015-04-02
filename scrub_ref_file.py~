@@ -1,0 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# This script takes in an ASR file that has lines of the format:
+# 7 116 und natürlich ist das unglaublich streng      
+# and scrubs off the unnecessary numbers
+
+import sys
+import re
+
+
+if len(sys.argv) != 2:
+    sys.exit("""Incorrect Parameters! Exiting
+                Usage:  scrub_ref_file <input file>""")
+
+inputfile = sys.argv[1]
+
+# Open the file and go through each line, building up the output file
+with open(inputfile) as f, open(inputfile+".post", "w") as w:   
+    lines = f.readlines()
+    for l in lines:
+        if len(l) == 0:
+            continue;
+        # A regular expression that scrubs out the postfixed numbers
+        regex = re.compile("^(.*)\(.*D0.*")
+        r = regex.match(l)
+	w.write(r.group(1) + "\n")
